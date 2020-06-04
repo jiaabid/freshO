@@ -18,7 +18,7 @@ const productSchema = mongoose.Schema({
         type:String
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     stock: {
@@ -34,6 +34,7 @@ const productSchema = mongoose.Schema({
         type:Buffer
     }
 })
+
 const category = mongoose.model("category", CategorySchema);
 const product = mongoose.model("products", productSchema);
 module.exports = { category, product };
