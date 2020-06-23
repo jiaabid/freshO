@@ -2,7 +2,8 @@ const customer = require('../models/customer');
 
 const signUp = async (req, res) => {
     try {
-        const existedCustomer = await customer.findOne({ email: req.body.email });
+        const { jwt } = req.body;
+        const existedCustomer = await customer.findOne({ email: jwt.email });
         console.log(existedCustomer)
         if (existedCustomer) {
             return res.status(200).json("this account already exist");
@@ -21,8 +22,9 @@ const login = async (req, res) => {
         const { email, password } = req.body;
         const isCustomer = await customer.findCredentials(email, password);
         if (!isCustomer)
-            throw new Error("No such user");
-        res.status(200).json(isCustomer);
+            return console.log("No such user");
+        const token = await isCustomer.myToken();
+        res.status(200).json({ id: isCustomer._id, token });
     } catch (err) {
         res.status(400).json(err);
     }
@@ -36,5 +38,14 @@ const myProfile = (req, res) => {
         res.status(404).send(err);
     }
 }
+const googleAuth = async (req, res) => {
+    try {
+        console.log(req.user)
+        const token = await req.user.myToken();
+        res.send(token)
+    } catch (err) {
+        res.send(err)
+    }
+}
 
-module.exports = { signUp, login };
+module.exports = { signUp, login, googleAuth };

@@ -30,6 +30,10 @@ const OrderSchema = mongoose.Schema({
     }
 
 });
-
+OrderSchema.virtual("delivered",{
+    ref:"deliveryTrack",
+    localField:"_id",
+    foreignField:"order_id"
+})
 const order = mongoose.model('orders', OrderSchema);
 module.exports = order;

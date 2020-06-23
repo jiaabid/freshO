@@ -6,11 +6,6 @@ const DeliveryTrackSchema = mongoose.Schema({
         required: true,
         ref: "orders"
     },
-    cust_id: {
-        type: String,
-        required: true,
-        ref: "customers"
-    },
     date: {
         type: String,
         required: true
@@ -21,6 +16,7 @@ const DeliveryTrackSchema = mongoose.Schema({
     }
 
 });
+
 DeliveryTrackSchema.pre("save", async function (next) {
     try {
         const orderExist = await order.findOne({ _id: this.order_id });

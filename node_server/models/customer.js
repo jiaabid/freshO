@@ -1,54 +1,74 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
+
 const CustomerSchema = mongoose.Schema({
+    method: {
+        type: String,
+        required: true,
+        default:"jwt"
+    },
     name: {
         type: String,
         required: true
     },
     number: {
         type: String,
-        required: true
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
+    jwt: {
+        email: {
+            type: String
+        },
+        password: {
+            type: String
+        }
     },
+    google: {
+        id:{
+            type:String
+        },
+        mail:{
+            type:String
+        }
+    }
+    ,
     address: {
-        type: String,
-        required: true
+        type: String
     },
     city: {
-        type: String,
-        required: true
+        type: String
     },
-    password: {
-        type: String,
-        required: true
-    },
-    token: [
-        { type: String }
+    tokens: [
+        { token: String }
     ]
 });
 CustomerSchema.pre('save', async function (next) {
     try {
-        this.password = await bcrypt.hash(this.password, 10);
+        console.log(this)
+        if(this.method == "jwt"){
+            if(this.isModified("jwt.password")){
+                this.jwt.password = await bcrypt.hash(this.jwt.password, 10);
+                return next();
+            }
+        }
         next();
     } catch (err) {
         next(err);
     }
 });
 
-CustomerSchema.statics.findCredentials = async (email, password) => {
+CustomerSchema.statics.findCredentials = async (email,password) => {
     try {
-        const person = await customer.findOne({ email });
+        const person = await customer.findOne({ "jwt.email":email });
+        console.log(person)
         if (!person) {
-            throw new Error("Invalid Email , Retry!");
+            return console.log("Invalid Email , Retry!");
         }
-        const same = await bcrypt.compare(password, person.password)
+        console.log(person.jwt.password)
+        const same = await bcrypt.compare(password, person.jwt.password)
         console.log(same)
         if (!same) {
-            throw new Error("Invalid Password!");
+            return console.log("Invalid Password!");
         }
         console.log(person)
         return person;
@@ -57,7 +77,22 @@ CustomerSchema.statics.findCredentials = async (email, password) => {
         return err;
     }
 }
+CustomerSchema.virtual("order",{
+    ref:"orders",
+    localField:"_id",
+    foreignField:"cust_id"
+})
 //token generator remaining
+CustomerSchema.methods.myToken =async function(){
+     try{
+         const token = await jwt.sign({_id:this._id.toString()},"freshO");
+         this.tokens = this.tokens.concat({token});
+         await this.save();
+         return token;
+     }catch(err){
+         return err
+     }
+}
 //limiting data
 CustomerSchema.methods.toJSON = function () {
     const user = this.toObject();
