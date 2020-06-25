@@ -4,7 +4,6 @@ const passport = require("passport")
 require("../config/passport");
 //for customer interface **not authenticated
 router.post("/signUp",controller.signUp);
-
 router.post("/login",controller.login);
 //google signIn
 router.get("/auth/google",passport.authenticate("google",{

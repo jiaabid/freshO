@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { timeStamp } = require('console');
 const OrderSchema = mongoose.Schema({
     products: [
         {
@@ -15,25 +16,20 @@ const OrderSchema = mongoose.Schema({
         required: true,
         ref: "custmomers"
     },
-    date: {
-        type: String,
-        default: Date.now()
-    },
-    time:String,
     tax: Number,
     discount: Number,
     bill: Number,
     subTotal: Number,
-    status:{
-        type:String,
-        default:"recieved"
+    status: {
+        type: String,
+        default: "recieved"
     }
 
-});
-OrderSchema.virtual("delivered",{
-    ref:"deliveryTrack",
-    localField:"_id",
-    foreignField:"order_id"
+}, { timestamps: true });
+OrderSchema.virtual("delivered", {
+    ref: "deliveryTrack",
+    localField: "_id",
+    foreignField: "order_id"
 })
 const order = mongoose.model('orders', OrderSchema);
 module.exports = order;

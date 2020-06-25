@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>hey</h2>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const socket2 = io();
+        const socket3 = io();
+        const socket4 = io();
+        const order = {
+            products: [
+                {
+                    id: "item1",
+                    quantity: 4
+                },
+                {
+                    id: "item2",
+                    quantity: 5
+                }
+            ],
+            cust_id: "customer1",
+            tax: 12,
+            discount: 100,
+            bill: 2000,
+            subTotal: 2000
+        }
+        socket.on("hello", (data) => {
+            console.log(data)
+            document.write(data.msg)
+        })
+        socket2.on("hello", (data) => {
+            console.log("socket2")
+        })
+        // socket.emit("addOrder",order)
+        // socket.on("orderAdded",(data)=>{
+        //            if(data.status)
+        //            return alert("successfully added",data.newEntry)
+        // })
+        // socket.on("orderError",(data)=>{
+        //            if(!data.status)
+        //            return alert(data.err)
+        // })
+        // socket3.emit("addOrder",order)
+        // socket3.on("orderAdded",(data)=>{
+        //            if(data.status)
+        //            return alert("successfully added",data.newEntry)
+        // })
+        // socket3.on("orderError",(data)=>{
+        //            if(!data.status)
+        //            return alert(data.err)
+        // })
+        socket.emit("orderEdit","order1")
+        socket2.on("edited",(id)=>{
+            console.log(id)
+        })
+        // setTimeout(()=>{
+        //     socket.emit("order",{
+        //         item1:{
+        //             quantity:2,
+        //             price:30
+        //         },
+        //         item2:{
+        //             quantity:4,
+        //             price:40
+        //         }
+        //     })
+        // },1000)
+        socket2.on("newOrder",(data)=>{
+            console.log(data)
+        })
+    </script>
+</body>
+
+</html>

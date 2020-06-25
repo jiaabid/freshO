@@ -1,14 +1,15 @@
 const order = require("../models/order");
 
-const addOrder = async (req, res) => {
+const addOrder = async (newOrder) => {
     try {
-        const item = new order(req.body);
+        console.log(newOrder)
+        const item = new order(newOrder);
         if (!item)
-            return res.status(400).json();
+            return {status:false,err:"error!"};
         await item.save();
-        res.status(201).json(item);
+        return {status:true,newEntry:item};
     } catch (err) {
-        res.status(400).json(err);
+        return {status:false,err};
     }
 }
 
@@ -59,4 +60,4 @@ const cancelOrder = async (req, res) => {
     }
 }
 
-module.exports = {addOrder,allOrders,updateOrder,cancelOrder}
+module.exports = {addOrder}
