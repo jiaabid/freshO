@@ -10,7 +10,7 @@ const addToCart = (req, res) => {
     // { _id: "tomatoe", price: 50, quantity: 2 },
     // { _id: "capsicum", price: 60, quantity: 3 }]
     if(req.query.id !== null){
-        redis.hmset(req.query.id, ["cart", JSON.stringify(req.body.cart)], (err, reply) => {
+        redis.hmset(req.query.id, [req.body.id, JSON.stringify(req.body.detail) ], (err, reply) => {
             if (!err)
                 return res.status(201).send(reply)
             res.send(err)
@@ -29,7 +29,8 @@ const myCart = (req, res) => {
         redis.hgetall(id, (err, data) => {
             console.log(data)
             if (!err)
-                return res.send(JSON.parse(data.cart))
+            if(data !== null)
+            return res.send(data)
             res.send(err)
         })
     }else{
@@ -41,7 +42,7 @@ const dltCart = (req,res)=>{
     if(req.query.id !== null){
         redis.del(req.query.id,(err,reply)=>{
             if(!err)
-            return res.status(200).send(reply)
+            return res.status(200).json(reply)
             res.status(400).send(err)
         })
     }else{
