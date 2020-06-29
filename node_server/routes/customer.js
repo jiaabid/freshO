@@ -10,5 +10,5 @@ router.get("/auth/google",passport.authenticate("google",{
     scope:["profile","email"]
 }))
 router.get("/auth/google/callback",passport.authenticate("google",{session:false}),controller.googleAuth)
-
+router.get("/check",controller.checkCoupons)
 module.exports = router

@@ -8,13 +8,32 @@ const couponSchema = mongoose.Schema({
     },
     usage_value: Number,
     order_limit: Number,
-    start_date: Date,
-    end_date: Date,
+    start_date: String,
+    end_date: String,
     status: {
         type: String,
         default: "active"
     }
 });
-
-const coupon = mongoose.model("coupon",couponSchema)
-moudule.exports = coupon
+const couponGivenSchema = mongoose.Schema({
+    coupon_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "coupon"
+    },
+    customer_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "customers"
+    },
+    avail: {
+        type: Boolean,
+        default: false
+    },
+    avail_date: {
+        type: Date
+    }
+});
+const coupon_tracker = mongoose.model("couponTracker", couponGivenSchema)
+const coupon = mongoose.model("coupon", couponSchema)
+module.exports = { coupon, coupon_tracker }

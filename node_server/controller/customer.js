@@ -47,5 +47,13 @@ const googleAuth = async (req, res) => {
         res.send(err)
     }
 }
-
-module.exports = { signUp, login, googleAuth };
+const checkCoupons = async (req, res) => {
+    try {
+        res.status(200).json({
+            coupons: await customer.find().populate("coupons")
+        })
+    } catch (err) {
+        res.status(400).json(err)
+    }
+}
+module.exports = { signUp, login, googleAuth,checkCoupons };

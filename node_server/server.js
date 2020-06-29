@@ -12,19 +12,24 @@ const inventoryRoutes = require("./routes/inventory");
 const deliveryRoutes = require("./routes/delivery");
 const orderRoutes = require("./routes/order");
 const cartRoutes = require("./routes/cart");
+const couponRoutes = require("./routes/coupon");
+const settingRoutes = require("./routes/settings");
 const client = require("./config/redis");
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")))
 app.get("/", (req, res) => {
     res.send("hello")
-})
-console.log(__dirname)
+});
+
 app.use('/customer/', CustomerRoutes);
 app.use("/category/", CategoryRoutes);
 app.use("/products/", inventoryRoutes);
 app.use("/delivery/", deliveryRoutes);
 app.use("/order/", orderRoutes);
 app.use("/cart/", cartRoutes);
+app.use("/coupon/",couponRoutes);
+app.use("/setting/",settingRoutes);
+
 
 //connecting to redis cache
 client.on("connect", (err, data) => {
@@ -73,7 +78,7 @@ io.on("connection", socket => {
 
 //server listening
 if (connected) {
-    httpServer.listen(3000, () => {
+    httpServer.listen(5000, () => {
         console.log("server connected");
     })
 }

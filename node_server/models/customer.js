@@ -6,7 +6,7 @@ const CustomerSchema = mongoose.Schema({
     method: {
         type: String,
         required: true,
-        default:"jwt"
+        default: "jwt"
     },
     name: {
         type: String,
@@ -24,11 +24,11 @@ const CustomerSchema = mongoose.Schema({
         }
     },
     google: {
-        id:{
-            type:String
+        id: {
+            type: String
         },
-        mail:{
-            type:String
+        mail: {
+            type: String
         }
     }
     ,
@@ -40,13 +40,19 @@ const CustomerSchema = mongoose.Schema({
     },
     tokens: [
         { token: String }
+    ],
+    coupons: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"coupon"
+        }
     ]
 });
 CustomerSchema.pre('save', async function (next) {
     try {
         console.log(this)
-        if(this.method == "jwt"){
-            if(this.isModified("jwt.password")){
+        if (this.method == "jwt") {
+            if (this.isModified("jwt.password")) {
                 this.jwt.password = await bcrypt.hash(this.jwt.password, 10);
                 return next();
             }
@@ -57,9 +63,9 @@ CustomerSchema.pre('save', async function (next) {
     }
 });
 
-CustomerSchema.statics.findCredentials = async (email,password) => {
+CustomerSchema.statics.findCredentials = async (email, password) => {
     try {
-        const person = await customer.findOne({ "jwt.email":email });
+        const person = await customer.findOne({ "jwt.email": email });
         console.log(person)
         if (!person) {
             return console.log("Invalid Email , Retry!");
@@ -77,21 +83,21 @@ CustomerSchema.statics.findCredentials = async (email,password) => {
         return err;
     }
 }
-CustomerSchema.virtual("order",{
-    ref:"orders",
-    localField:"_id",
-    foreignField:"cust_id"
-})
+// CustomerSchema.virtual("order", {
+//     ref: "orders",
+//     localField: "_id",
+//     foreignField: "cust_id"
+// })
 //token generator remaining
-CustomerSchema.methods.myToken =async function(){
-     try{
-         const token = await jwt.sign({_id:this._id.toString()},"freshO");
-         this.tokens = this.tokens.concat({token});
-         await this.save();
-         return token;
-     }catch(err){
-         return err
-     }
+CustomerSchema.methods.myToken = async function () {
+    try {
+        const token = await jwt.sign({ _id: this._id.toString() }, "freshO");
+        this.tokens = this.tokens.concat({ token });
+        await this.save();
+        return token;
+    } catch (err) {
+        return err
+    }
 }
 //limiting data
 CustomerSchema.methods.toJSON = function () {

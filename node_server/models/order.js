@@ -4,7 +4,7 @@ const OrderSchema = mongoose.Schema({
     products: [
         {
             id: {
-                type: String,
+                type: mongoose.Schema.Types.ObjectId,
                 required: true,
                 ref: "products"
             },
@@ -12,7 +12,7 @@ const OrderSchema = mongoose.Schema({
         }
     ],
     cust_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "custmomers"
     },
@@ -23,13 +23,18 @@ const OrderSchema = mongoose.Schema({
     status: {
         type: String,
         default: "recieved"
+    },
+    deliveryTime:"String",
+    deliverBy:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"rider"
     }
 
 }, { timestamps: true });
-OrderSchema.virtual("delivered", {
-    ref: "deliveryTrack",
-    localField: "_id",
-    foreignField: "order_id"
-})
+// OrderSchema.virtual("delivered", {
+//     ref: "deliveryTrack",
+//     localField: "_id",
+//     foreignField: "order_id"
+// })
 const order = mongoose.model('orders', OrderSchema);
 module.exports = order;
