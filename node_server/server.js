@@ -4,7 +4,9 @@ const connected = require('./config/db');
 // const { httpServer, io } = require("./config/socket");
 const httpServer = require("http").createServer(app);
 const io = require("socket.io")(httpServer);
+const adminIo = io.of("/admin")
 const path = require("path");
+const cors = require("cors");
 const OrderController = require("./controller/order");
 const CustomerRoutes = require('./routes/customer');
 const CategoryRoutes = require('./routes/category');
@@ -15,20 +17,28 @@ const cartRoutes = require("./routes/cart");
 const couponRoutes = require("./routes/coupon");
 const settingRoutes = require("./routes/settings");
 const client = require("./config/redis");
+app.use(cors({origin:true}));
 app.use(express.json());
+// app.use((req,res,next)=>{
+//     res.setHeader('Access-Control-Allow-Origin','*');
+//     res.setHeader('Access-Control-Allow-Method','GET,POST,PUT,PATCH,DELETE');
+//     res.setHeader('Access-Control-Allow-Header','Content-Type, Authorization');
+//     next();
+// })
+
 app.use(express.static(path.join(__dirname, "public")))
 app.get("/", (req, res) => {
     res.send("hello")
 });
-
-app.use('/customer/', CustomerRoutes);
-app.use("/category/", CategoryRoutes);
-app.use("/products/", inventoryRoutes);
-app.use("/delivery/", deliveryRoutes);
-app.use("/order/", orderRoutes);
-app.use("/cart/", cartRoutes);
-app.use("/coupon/",couponRoutes);
-app.use("/setting/",settingRoutes);
+console.log("hello")
+app.use('/customer', CustomerRoutes);
+app.use("/category", CategoryRoutes);
+app.use( inventoryRoutes);
+app.use("/delivery", deliveryRoutes);
+app.use("/order", orderRoutes);
+app.use("/cart", cartRoutes);
+app.use("/coupon",couponRoutes);
+app.use("/setting",settingRoutes);
 
 
 //connecting to redis cache
@@ -49,11 +59,11 @@ io.on("connection", socket => {
     //when client add new order
     socket.on("addOrder", (data) => {
         OrderController.addOrder(data).then(result => {
-            if (result.status) {
+            if (true) {
                 //if successfully added to db then send to admin panel
-                io.emit("newOrder", result.newEntry)
+                adminIo.emit("newOrder", data)
                 //affirming on client side
-                return socket.emit("orderAdded", result)
+                return socket.emit("orderAdded", "done")
             }
             else {
                 //sending error to client-side
@@ -75,10 +85,12 @@ io.on("connection", socket => {
         io.emit("cancelled", { id })
     })
 })
-
+io.on("disconnect",(socket)=>{
+    conole.log("hello",socket)
+})
 //server listening
 if (connected) {
-    httpServer.listen(5000, () => {
+    httpServer.listen(5500, () => {
         console.log("server connected");
     })
 }

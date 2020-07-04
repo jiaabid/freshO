@@ -8,6 +8,6 @@ const settingSchema = mongoose.Schema({
     discount: Number,
     deliveryCharge: Number
 });
-console.log(Timestamp);
+// console.log(Timestamp);
 const setting = mongoose.model("settings", settingSchema);
 module.exports = setting;

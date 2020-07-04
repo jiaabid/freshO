@@ -6,6 +6,8 @@ router.post("/addItem",controller.addCat);
 router.delete("/dltItem",controller.dltItem);
 
 //for customer interface
-router.get("/items",controller.getItems)
+router.get("/items",controller.getItems);
+router.get("/categoryNames", controller.categoryName)
+
 
 module.exports = router

@@ -1,5 +1,4 @@
 const order = require("../models/order");
-const { brotliDecompress } = require("zlib");
 
 const addOrder = async (newOrder) => {
     try {
@@ -29,6 +28,13 @@ const allOrders = async (req, res) => {
         res.status(400).json();
     } catch (err) {
         res.status(400).json(err);
+    }
+}
+const specificOrder = async(req,res)=>{
+    try{
+
+    }catch(err){
+        
     }
 }
 const date = new Date()

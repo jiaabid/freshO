@@ -15,8 +15,11 @@ const upload = multer({
 
 
 //routes for the admin view
+router.get("/search",controller.postSearch);
+router.get("/editproduct", controller.editProduct);
+
 router.post("/uploadItem", upload.single("image"), controller.uploadProduct);
-router.patch("/updateItem", controller.updateProduct);
+router.post("/updateItem", controller.updateProduct);
 router.delete("/dltItem", controller.dltProduct);
 
 //route used in customer view

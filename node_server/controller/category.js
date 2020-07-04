@@ -45,4 +45,10 @@ const dltItem = async (req, res) => {
         res.status(400).json();
     }
 }
-module.exports = { addCat,getItems,dltItem }
+
+const categoryName = async(req, res, next) => {
+    const categoryName = await category.find();
+    console.log(categoryName);
+    res.status(200).json({ categoryName});
+}
+module.exports = { addCat,getItems,dltItem, categoryName }

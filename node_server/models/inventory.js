@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { StringDecoder } = require('string_decoder');
 const CategorySchema = mongoose.Schema({
     cat_id: {
         type: String,
@@ -31,7 +32,7 @@ const productSchema = mongoose.Schema({
         ref: "category"
     },
     imgUrl:{
-        type:Buffer
+        type:String,
     }
 })
 
