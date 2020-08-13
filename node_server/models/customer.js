@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const uniqueBeauty = require("mongoose-beautiful-unique-validation")
 
 const CustomerSchema = mongoose.Schema({
     method: {
@@ -25,10 +26,12 @@ const CustomerSchema = mongoose.Schema({
     },
     google: {
         id: {
-            type: String
+            type: String,
+            default:""
         },
         mail: {
-            type: String
+            type: String,
+            default:""
         }
     }
     ,
@@ -48,12 +51,15 @@ const CustomerSchema = mongoose.Schema({
         }
     ]
 });
+// CustomerSchema.plugin(uniqueBeauty)
+
 CustomerSchema.pre('save', async function (next) {
     try {
         console.log(this)
         if (this.method == "jwt") {
             if (this.isModified("jwt.password")) {
                 this.jwt.password = await bcrypt.hash(this.jwt.password, 10);
+                console.log(this.jwt.password)
                 return next();
             }
         }

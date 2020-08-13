@@ -3,6 +3,7 @@ const { object } = require("../config/redis");
 
 const newSetting = async (req, res) => {
     try {
+        console.log(req.body)
         const set = new setting(req.body);
         if (!set)
             return res.status(400).json("It doesn't exist");

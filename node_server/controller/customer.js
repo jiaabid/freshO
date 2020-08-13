@@ -2,6 +2,8 @@ const customer = require('../models/customer');
 
 const signUp = async (req, res) => {
     try {
+       
+       
         const { jwt } = req.body;
         const existedCustomer = await customer.findOne({ email: jwt.email });
         console.log(existedCustomer)
@@ -9,8 +11,10 @@ const signUp = async (req, res) => {
             return res.status(200).json("this account already exist");
 
         }
+        console.log("yes going")
         const newCustomer = new customer(req.body);
         await newCustomer.save();
+        console.log(newCustomer + "cust")
         res.status(201).json(newCustomer);
     } catch (err) {
         res.status(400).json(err);

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const controller = require("../controller/inventory");
+const auth = require("../middleware/auth")
 const multer = require("multer");
 const upload = multer({
     limits: {
@@ -15,13 +16,13 @@ const upload = multer({
 
 
 //routes for the admin view
-router.get("/search",controller.postSearch);
+router.get("/search",auth,controller.postSearch);
 router.get("/editproduct", controller.editProduct);
 
-router.post("/uploadItem", upload.single("image"), controller.uploadProduct);
-router.post("/updateItem", controller.updateProduct);
-router.delete("/dltItem", controller.dltProduct);
+router.post("/uploadItem",auth,  controller.uploadProduct);
+router.patch("/updateItem",auth, controller.updateProduct);
+router.delete("/dltItem",auth, controller.dltProduct);
 
 //route used in customer view
-router.get("/items", controller.products);
+router.get("/items",auth, controller.products);
 module.exports = router

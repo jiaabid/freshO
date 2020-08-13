@@ -15,15 +15,25 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    prod_id:{
-        type:String
+    prod_id: {
+        type: String
     },
-    price: {
+    sale_price: {
         type: Number,
         required: true
     },
+    cost_price: {
+        type: Number,
+        required: true
+    },
+    profit: {
+        type: Number,
+        default: function(){
+            return this.sale_price-this.cost_price
+        }
+    },
     stock: {
-        type: String,
+        type: Number,
         required: true
     },
     cat_id: {
@@ -31,8 +41,8 @@ const productSchema = mongoose.Schema({
         required: true,
         ref: "category"
     },
-    imgUrl:{
-        type:String,
+    imgUrl: {
+        type: String,
     }
 })
 
